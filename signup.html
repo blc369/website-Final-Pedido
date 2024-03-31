@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrarse</title>
+    <link rel="stylesheet" href="css/style1.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Registrarse</h1>
+        <form id="signupForm">
+            <input type="text" id="name" placeholder="Nombre" required>
+            <input type="email" id="email" placeholder="Correo Electrónico" required>
+            <input type="password" id="password" placeholder="Contraseña" required>
+            <input type="password" id="confirmPassword" placeholder="Confirmar Contraseña" required>
+            <input type="number" id="age" placeholder="Edad" required>
+            <label for="gender">Sexo:</label>
+            <select id="gender" required>
+                <option value="">Seleccionar</option>
+                <option value="male">Masculino</option>
+                <option value="female">Femenino</option>
+                <option value="other">Otro</option>
+            </select>
+            <button type="submit">Registrarse</button>
+        </form>
+        <p>Ya tienes una cuenta? <a href="index.html">Iniciar Sesión</a></p>
+    </div>
+    <script src="js/signup.js"></script>
+</body>
+</html>

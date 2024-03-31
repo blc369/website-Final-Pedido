@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carta de Platos</title>
+    <link rel="stylesheet" href="css/style3.css">
+    <!-- Agregar Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+       <style>
+        /* Estilos para el pedido */
+        .pedido-section {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            background-color: #fff; /* Fondo blanco */
+            border-left: 1px solid #ddd;
+            padding: 20px;
+            transition: right 0.3s ease;
+            overflow-y: auto; /* Agregar barra de desplazamiento vertical cuando se necesite */
+            max-height: calc(100% - 60px); /* Máximo altura del pedido */
+            border-radius: 10px; /* Esquinas redondeadas */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra */
+        }
+        .pedido-section.active {
+            right: 0;
+        }
+        .pedido-header {
+            cursor: pointer;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #000;
+        }
+        .pedido-lista {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .pedido-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            color: #000;
+            border: 1px solid #ddd; /* Borde alrededor de cada plato */
+            padding: 5px; /* Espaciado interno */
+            border-radius: 5px; /* Esquinas redondeadas */
+        }
+        .btn-eliminar {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .pedido-toggle {
+            position: fixed;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .pedido-toggle:hover {
+            background-color: #0056b3;
+        }
+        .total-pedido {
+            color: #000;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .enviar-pedido-btn {
+    background-color: #28a745; /* Verde */
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-top: 20px;
+    cursor: pointer;
+    float: right; /* Para alinear a la derecha */
+}
+    </style>
+
+</head>
+<body>
+    <div class="container">
+        <h1>Carta de Platos</h1>
+        <div class="section">
+            <div class="item">
+                <h3>Lomo Saltado</h3>
+                <p>Trozos de carne de res salteados con cebolla, tomate y papas fritas.</p>
+                <p class="price">$15.99</p>
+                <button class="button" onclick="agregarPlato('Lomo Saltado', 15.99)">Agregar</button>
+            </div>
+            <div class="item">
+                <h3>Arroz con Pollo</h3>
+                <p>Arroz cocido con pollo deshilachado y vegetales.</p>
+                <p class="price">$12.99</p>
+                <button class="button" onclick="agregarPlato('Arroz con Pollo', 12.99)">Agregar</button>
+            </div>
+            <div class="item">
+                <h3>Ceviche de Pescado</h3>
+                <p>Pescado fresco marinado en limón con cebolla roja y cilantro.</p>
+                <p class="price">$14.99</p>
+                <button class="button" onclick="agregarPlato('Ceviche de Pescado', 14.99)">Agregar</button>
+            </div>
+            <div class="item">
+                <h3>Aji de Gallina</h3>
+                <p>Pollo desmenuzado en salsa de ají amarillo, servido con papas y arroz.</p>
+                <p class="price">$13.99</p>
+                <button class="button" onclick="agregarPlato('Aji de Gallina', 13.99)">Agregar</button>
+            </div>
+            <div class="item">
+                <h3>Tallarines Verdes</h3>
+                <p>Tallarines en salsa verde de espinacas, servidos con bistec a la parrilla.</p>
+                <p class="price">$16.99</p>
+                <button class="button" onclick="agregarPlato('Tallarines Verdes', 16.99)">Agregar</button>
+            </div>
+            <div class="item">
+                <h3>Seco de Cordero</h3>
+                <p>Cordero cocido lentamente en salsa de cilantro y cerveza, acompañado de frejoles y arroz.</p>
+                <p class="price">$18.99</p>
+                <button class="button" onclick="agregarPlato('Seco de Cordero', 18.99)">Agregar</button>
+            </div>
+            <div class="item">
+                <h3>Chaufa de Mariscos</h3>
+                <p>Arroz salteado al estilo chifa con camarones, calamares y mejillones.</p>
+                <p class="price">$17.99</p>
+                <button class="button" onclick="agregarPlato('Chaufa de Mariscos', 17.99)">Agregar</button>
+            </div>
+            <div class="item">
+                <h3>Papa a la Huancaína</h3>
+                <p>Papas cocidas en salsa de ajíamarillo y queso fresco, acompañadas de huevo y aceitunas.</p>
+                <p class="price">$10.99</p>
+                <button class="button" onclick="agregarPlato('Papa a la Huancaína', 10.99)">Agregar</button>
+            </div>
+            <div class="item">
+                <h3>Saltado de Vegetales</h3>
+                <p>Vegetales salteados con salsa de soja y jengibre, servidos con                <p class="price">$11.99</p>
+                <button class="button" onclick="agregarPlato('Saltado de Vegetales', 11.99)">Agregar</button>
+            </div>
+            <div class="item">
+                <h3>Cau Cau</h3>
+                <p>Estofado de mondongo con papas y ají amarillo, acompañado de arroz blanco.</p>
+                <p class="price">$14.99</p>
+                <button class="button" onclick="agregarPlato('Cau Cau', 14.99)">Agregar</button>
+            </div>
+        </div>
+        <!-- Sección del pedido -->
+             <!-- Sección del pedido -->
+        <div class="pedido-section" id="pedidoSection">
+            <div class="pedido-header" onclick="togglePedido()">volver <span>&#9664;</span></div>
+            <ul class="pedido-lista" id="listaPedido"></ul>
+            <div class="total-pedido" id="totalPedido"></div>
+            <!-- Botón para enviar el pedido -->
+            <button class="enviar-pedido-btn" onclick="enviarPedido()">Enviar pedido</button>
+        </div>
+        <!-- Botón para mostrar/ocultar el pedido -->
+        <div class="pedido-toggle" onclick="togglePedido()"><span>&#9658;</span></div>
+    </div>
+
+    <!-- JavaScript -->
+<script>
+        function togglePedido() {
+            var pedidoSection = document.getElementById('pedidoSection');
+            pedidoSection.classList.toggle('active');
+            actualizarPedido();
+        }
+
+        function agregarPlato(nombre, precio) {
+            var plato = {
+                nombre: nombre,
+                precio: precio
+            };
+            localStorage.setItem('plato_' + nombre.replace(/\s/g, ''), JSON.stringify(plato));
+            actualizarPedido();
+        }
+
+        function actualizarPedido() {
+            var listaPedido = document.getElementById('listaPedido');
+            var totalPedido = 0;
+            listaPedido.innerHTML = '';
+
+            for (var i = 0; i < localStorage.length; i++) {
+                var clave = localStorage.key(i);
+                if (clave.startsWith('plato_')) {
+                    var plato = JSON.parse(localStorage.getItem(clave));
+                    var li = document.createElement('li');
+                    li.classList.add('pedido-item');
+                    li.textContent = plato.nombre;
+                    var btnEliminar = document.createElement('button');
+                    btnEliminar.textContent = 'Eliminar';
+                    btnEliminar.classList.add('btn-eliminar');
+                    btnEliminar.setAttribute('data-clave', clave);
+                    btnEliminar.onclick = function() {
+                        localStorage.removeItem(this.getAttribute('data-clave'));
+                        actualizarPedido();
+                    };
+                    li.appendChild(btnEliminar);
+                    listaPedido.appendChild(li);
+                    totalPedido += parseFloat(plato.precio);
+                }
+            }
+
+            document.getElementById('totalPedido').textContent = 'Total: $' + totalPedido.toFixed(2);
+        }
+
+        function enviarPedido() {
+            var pedidoData = JSON.stringify(localStorage);
+
+            // Abre la página para el cocinero en una nueva pestaña
+            window.open('NotificacionCocina.html?pedidoData=' + encodeURIComponent(pedidoData), '_blank');
+
+            // Abre la página de pedido final en la misma pestaña
+            window.location.href = 'pedido_final.html?pedidoData=' + encodeURIComponent(pedidoData);
+        }
+    </script>
+</body>
+</html>

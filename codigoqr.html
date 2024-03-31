@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Código QR para la carta de platos</title>
+    <!-- Agregar la biblioteca QRCode.js -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@latest"></script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #qrCodeContainer {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="qrCodeContainer"></div>
+
+    <script>
+        // Obtener la URL de la página de la carta de platos
+        var cartaURL = window.location.origin + '/carta1.html';
+
+        // Generar el código QR
+        var qrCodeContainer = document.getElementById('qrCodeContainer');
+        var qrCode = new QRCode(qrCodeContainer, {
+            text: cartaURL,
+            width: 200,
+            height: 200
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedido para Cocina</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .pedido-details {
+            margin-top: 30px;
+            border-top: 2px solid #ddd;
+            padding-top: 20px;
+        }
+        .pedido-details h2 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .pedido-details p {
+            margin-bottom: 10px;
+            color: #666;
+        }
+        .pedido-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .pedido-item:last-child {
+            margin-bottom: 0;
+        }
+        .start-order-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .pedido-progress-bar {
+            display: none;
+            width: 100%;
+            background-color: #ddd;
+            border-radius: 5px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+        .pedido-progress {
+            width: 0%;
+            height: 20px;
+            background-color: #007bff;
+            transition: width 0.5s ease;
+        }
+        .finish-order-btn {
+            display: none;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Pedido Recibido</h1>
+        <div class="pedido-details">
+            <h2>Detalle del Pedido</h2>
+            <div id="pedidoList">
+                <!-- Aquí se mostrarán los detalles del pedido -->
+            </div>
+        </div>
+        <div class="pedido-details" id="pedidoEntregadoSection" style="display: none;">
+            <h2>Pedidos Entregados</h2>
+            <div id="pedidoEntregadoList">
+                <!-- Aquí se mostrarán los pedidos entregados -->
+            </div>
+        </div>
+        <div class="pedido-progress-bar" id="pedidoProgressBar">
+            <div class="pedido-progress" id="pedidoProgress"></div>
+        </div>
+        <button class="start-order-btn" onclick="mostrarBarraProgreso()">Comenzar Nuevo Pedido</button>
+        <button class="finish-order-btn" style="display:none;" onclick="finalizarPedido()">Pedido Listo para Entregar</button>
+    </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Mostrar el contenido del pedido al cargar la página
+        mostrarPedido();
+    });
+
+    function mostrarPedido() {
+        var pedidoList = document.getElementById('pedidoList');
+        var pedidoData = {};
+        for (var i = 0; i < localStorage.length; i++) {
+            var clave = localStorage.key(i);
+            if (clave.startsWith('plato_')) {
+                pedidoData[clave] = localStorage.getItem(clave);
+            }
+        }
+
+        pedidoList.innerHTML = '';
+        for (var clave in pedidoData) {
+            if (pedidoData.hasOwnProperty(clave)) {
+                var plato = JSON.parse(pedidoData[clave]);
+                var divPedidoItem = document.createElement('div');
+                divPedidoItem.classList.add('pedido-item');
+                divPedidoItem.textContent = plato.nombre;
+                pedidoList.appendChild(divPedidoItem);
+            }
+        }
+    }
+
+    function mostrarBarraProgreso() {
+        // Mostrar la barra de progreso
+        document.getElementById('pedidoProgressBar').style.display = 'block';
+        // Ocultar el botón "Comenzar Nuevo Pedido"
+        document.querySelector('.start-order-btn').style.display = 'none';
+        // Mostrar el botón "Pedido Listo para Entregar"
+        document.querySelector('.finish-order-btn').style.display = 'block';
+    }
+
+    function finalizarPedido() {
+        // Mostrar un cuadro de diálogo de confirmación
+        var confirmacion = confirm('¿Estás seguro de que el pedido está listo para ser entregado en cocina?');
+
+        // Si el usuario hace clic en "Aceptar" en el cuadro de diálogo
+        if (confirmacion) {
+            // Realizar las acciones para finalizar el pedido
+            var pedidoList = document.getElementById('pedidoList');
+            var pedidoEntregadoList = document.getElementById('pedidoEntregadoList');
+            var pedidosEntregadosData = [];
+
+            while (pedidoList.firstChild) {
+                var pedidoItem = pedidoList.removeChild(pedidoList.firstChild);
+                var divPedidoItem = document.createElement('div');
+                divPedidoItem.classList.add('pedido-item');
+                var nombrePlato = document.createElement('p');
+                nombrePlato.textContent = pedidoItem.textContent + ' - Pedido finalizado';
+                divPedidoItem.appendChild(nombrePlato);
+                pedidoEntregadoList.appendChild(divPedidoItem);
+                pedidosEntregadosData.push(divPedidoItem.outerHTML); // Guardar el pedido entregado
+            }
+
+            // Guardar los pedidos entregados en el almacenamiento local
+            guardarPedidoEntregado(JSON.stringify(pedidosEntregadosData));
+            guardarPedido(''); // Limpiar los pedidos pendientes en el almacenamiento local
+
+            document.getElementById('pedidoEntregadoSection').style.display = 'block';
+            document.getElementById('pedidoProgressBar').style.display = 'none';
+            document.querySelector('.finish-order-btn').style.display = 'none';
+            document.querySelector('.start-order-btn').style.display = 'none'; // Ocultar el botón "Comenzar Nuevo Pedido"
+            alert('El pedido está listo para ser entregado en cocina.');
+        }
+    }
+
+    // Función para guardar el pedido entregado en el almacenamiento local
+    function guardarPedidoEntregado(pedido) {
+        localStorage.setItem('pedidoEntregado', pedido);
+    }
+
+    // Función para limpiar los pedidos pendientes en el almacenamiento local
+    function guardarPedido(pedido) {
+        localStorage.setItem('pedidoPendiente', pedido);
+    }
+</script>
+
+
+</body>
+</html>

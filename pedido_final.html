@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedido Final</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .pedido-details {
+            border-top: 2px solid #ddd;
+            padding-top: 20px;
+            margin-bottom: 30px;
+        }
+        .pedido-details h2 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .pedido-details p {
+            margin-bottom: 5px;
+            color: #666;
+        }
+        .pedido-details ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .pedido-details li {
+            margin-bottom: 3px;
+            color: #333;
+        }
+        .pedido-details li span {
+            float: right;
+            font-weight: bold;
+            color: #333;
+        }
+        .total {
+            font-size: 1.2em;
+            font-weight: bold;
+            text-align: right;
+            margin-top: 20px;
+            color: #333;
+        }
+        .nota {
+            font-size: 0.8em;
+            text-align: justify;
+            color: #666;
+            margin-top: 20px;
+        }
+        .redes-sociales {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .redes-sociales p {
+            margin-bottom: 10px;
+            color: #666;
+        }
+        .redes-sociales a {
+            display: inline-block;
+            margin: 0 10px;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .redes-sociales a:hover {
+            text-decoration: underline;
+        }
+        .codigo {
+            font-size: 0.8em;
+            color: #666;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>¡Gracias por tu pedido!</h1>
+        <div class="pedido-details">
+            <h2>Detalle del Pedido</h2>
+            <ul id="listaPedido">
+                <!-- Aquí se mostrarán los platos pedidos -->
+            </ul>
+            <p class="total" id="totalPedido">Total: $0.00</p>
+            <p class="nota">* Los precios incluyen impuestos.</p>
+        </div>
+        <div class="redes-sociales">
+            <p>¡Síguenos en nuestras redes sociales para más ofertas y promociones!</p>
+            <a href="#">Facebook</a>
+            <a href="#">Twitter</a>
+            <a href="#">Instagram</a>
+        </div>
+        <p class="codigo">Código de boleta: <strong>#123456789</strong></p>
+    </div>
+<script>
+    window.onload = function() {
+        var listaPedido = document.getElementById('listaPedido');
+        var totalPedidoElement = document.getElementById('totalPedido');
+
+        // Obtener los datos del pedido de la URL
+        var urlParams = new URLSearchParams(window.location.search);
+        var pedidoData = urlParams.get('pedidoData');
+        var pedido = JSON.parse(pedidoData);
+
+        var totalPedido = 0;
+
+        // Iterar sobre los platos del pedido y mostrarlos en la lista
+        for (var key in pedido) {
+            if (key.startsWith('plato_')) {
+                var plato = JSON.parse(pedido[key]);
+                var li = document.createElement('li');
+                li.innerHTML = `<span>$${plato.precio}</span> ${plato.nombre}`;
+                listaPedido.appendChild(li);
+                totalPedido += parseFloat(plato.precio);
+            }
+        }
+
+        totalPedidoElement.textContent = `Total: $${totalPedido.toFixed(2)}`;
+    };
+</script>
+</body>
+</html>
